@@ -25,6 +25,9 @@ namespace tdlr
 
 		public TaskListPage ()
 		{
+			_tasks = new ObservableCollection<Task> ();
+
+			#region UI Init
 			NavigationPage.SetHasNavigationBar (this, false);
 
 			this.Title = "tdlr;";
@@ -98,22 +101,11 @@ namespace tdlr
 				IsVisible = false,
 			};
 
-			_entry.Completed += OnTaskEntered;
-			_cancel.GestureRecognizers.Add (new TapGestureRecognizer (OnCancelClicked));
-			_add.GestureRecognizers.Add (new TapGestureRecognizer (OnAddClicked));
-			_delete.GestureRecognizers.Add (new TapGestureRecognizer (OnDeleteClicked));
-			_edit.GestureRecognizers.Add (new TapGestureRecognizer (OnEditClicked));
-			_share.GestureRecognizers.Add (new TapGestureRecognizer (OnShareClicked));
-			_done.GestureRecognizers.Add (new TapGestureRecognizer (OnDoneClicked));
-
-			_tasks = new ObservableCollection<Task> ();
-
 			_taskList = new ListView {
 				ItemsSource = _tasks,
+				IsPullToRefreshEnabled = true,
 			};
-
 			_taskList.ItemTemplate = new DataTemplate (typeof(TaskCell));
-			_taskList.ItemSelected += OnTaskSelected;
 
 			Image menu = new Image {
 				Aspect = Aspect.AspectFit,
@@ -121,8 +113,6 @@ namespace tdlr
 				HorizontalOptions = LayoutOptions.Start,
 				VerticalOptions = LayoutOptions.Center,
 			};
-
-			menu.GestureRecognizers.Add (new TapGestureRecognizer (OnMenuClicked));
 
 			_navbar = new StackLayout {
 				Orientation = StackOrientation.Horizontal,
@@ -150,6 +140,24 @@ namespace tdlr
 				}
 			};
 
+			#endregion
+
+			#region Event Listeners
+
+			_entry.Completed += OnTaskEntered;
+			_cancel.GestureRecognizers.Add (new TapGestureRecognizer (OnCancelClicked));
+			_add.GestureRecognizers.Add (new TapGestureRecognizer (OnAddClicked));
+			_delete.GestureRecognizers.Add (new TapGestureRecognizer (OnDeleteClicked));
+			_edit.GestureRecognizers.Add (new TapGestureRecognizer (OnEditClicked));
+			_share.GestureRecognizers.Add (new TapGestureRecognizer (OnShareClicked));
+			_done.GestureRecognizers.Add (new TapGestureRecognizer (OnDoneClicked));
+			_taskList.ItemSelected += OnTaskSelected;
+			menu.GestureRecognizers.Add (new TapGestureRecognizer (OnMenuClicked));
+
+			#endregion
+
+			#region Main Layout
+
 			Content = new StackLayout {
 				Orientation = StackOrientation.Vertical,
 				Spacing = 0,
@@ -164,16 +172,14 @@ namespace tdlr
 					_entry,
 					new ScrollView {
 						Content = _taskList
-					},
-					new BoxView {
-						Color = Color.Gray,
-						HeightRequest = 10,
-						BackgroundColor = Color.Black
-					},
+					}
 				}
 			};
+
+			#endregion
 		}
 
+		// When a task is selected or deselected, show the right actions
 		void OnTaskSelected(object sender, SelectedItemChangedEventArgs e)
 		{
 			if (e.SelectedItem != null) {
@@ -214,11 +220,16 @@ namespace tdlr
 			} 
 		}
 
+		// When the user creates a task, try to create & add it to the list
 		async void OnTaskEntered(object sender, EventArgs e)
 		{
 			if (!String.IsNullOrEmpty (_entry.Text)) {
 				try {
+
+					// Create the task
 					await TaskHelper.CreateTask(_entry.Text);
+
+					// Update the UI
 					_entry.FadeTo(0, 250);
 					_entry.IsEnabled = false;
 					_entry.IsVisible = false;
@@ -227,13 +238,17 @@ namespace tdlr
 					_cancel.IsVisible = false;
 					_add.IsVisible = true;
 					_add.FadeTo (1, 250);
+
+					// Refresh the list data
 					OnAppearing();
+
 				} catch (Exception ex) {
-					// Error Creating Task
+					this.DisplayAlert ("Error creating task", ex.Message, "OK");
 				}
 			}
 		}
 
+		// When the user cancels adding a task
 		async void OnCancelClicked(View image, object sender)
 		{
 			_entry.FadeTo(0, 250);
@@ -246,22 +261,30 @@ namespace tdlr
 			_add.FadeTo (1, 250);
 		}
 
+		// When the user deletes a task
 		async void OnDeleteClicked(View image, object sender)
 		{
 			try {
+				// Delete the task
 				Task task = ((Task)_taskList.SelectedItem);
 				await TaskHelper.DeleteTask(task);
+
+				// Remove it from the list, and deselect the task
 				_tasks.Remove(task);
-			} catch (Exception e) {
-				// Error on delete
+				_taskList.SelectedItem = null;
+
+			} catch (Exception ex) {
+				this.DisplayAlert ("Error deleting task", ex.Message, "OK");
 			}
 		}
 
+		// Unselect the task
 		async void OnDoneClicked(View image, object sender)
 		{
 			_taskList.SelectedItem = null;					
 		}
 
+		// Show the add task UI
 		async void OnAddClicked(View image, object sender)
 		{
 			_entry.IsEnabled = true;
@@ -274,8 +297,10 @@ namespace tdlr
 			_cancel.FadeTo (1, 250);
 		}
 
+		// Bring up the options for task status
 		async void OnEditClicked(View image, object sender)
 		{
+			// Show status options
 			Task task = ((Task)_taskList.SelectedItem);
 			string oldStatus = task.Status;
 			var status = await DisplayActionSheet (task.TaskText, "Cancel", null, new string [] {"NotStarted", "InProgress", "Complete", "Blocked"}); 
@@ -285,22 +310,26 @@ namespace tdlr
 
 			task.Status = status;
 			try {
+
+				// Update the status on the server
 				await TaskHelper.UpdateTask(task);
 			} catch (Exception ex) {
-				// Error updating
 				task.Status = oldStatus;
-				return;
+				DisplayAlert ("Error updating task", ex.Message, "OK");
 			}
 		}
 
+		// Launch the share list page
 		async void OnShareClicked(View image, object sender)
 		{
-			Navigation.PushAsync (new SharePage ((Task)_taskList.SelectedItem));
+			Navigation.PushAsync (new ShareListPage ((Task)_taskList.SelectedItem));
 		}
 
+		// Logout
 		async void OnMenuClicked(View image, object sender)
 		{
 			App.AuthContext.TokenCache.Clear ();
+			App.SetADALAuthority ();
 			OnAppearing ();
 		}
 
@@ -309,13 +338,27 @@ namespace tdlr
 			_tasks.Clear ();
 			base.OnAppearing ();
 			try {
+				// Make sure the user is signed in and we can get token for calling APIs
 				AuthenticationResult authResult = await App.AuthContext.AcquireTokenSilentAsync (App.taskApiResourceId, App.clientId);
 				_userObjectId = authResult.UserInfo.UniqueId;
+
+			} catch (Exception ex) {
+				// Send the user back to the sign in screen, they need to sign in again.	
+				App.AuthContext.TokenCache.Clear ();
+				Navigation.InsertPageBefore (new WelcomePage (), this);
+				Navigation.PopAsync ().ConfigureAwait (false);
+				return;
+			}
+
+			try {
+				// Update the list of tasks
 				List<Task> tasks = await TaskHelper.GetUserTasks();
 				foreach (Task task in tasks) {
 					_tasks.Add (task);
 				}
+
 			} catch (Exception ex) {
+				await this.DisplayAlert ("Error getting tasks", ex.Message, "OK");
 				Navigation.InsertPageBefore (new WelcomePage (), this);
 				Navigation.PopAsync ().ConfigureAwait (false);
 			}

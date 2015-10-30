@@ -20,6 +20,8 @@ namespace tdlr
 
 		public SignUpPage ()
 		{
+			#region UI Init
+
 			NavigationPage.SetHasNavigationBar (this, false);
 
 			_signUpButton = new Button { 
@@ -110,6 +112,10 @@ namespace tdlr
 				HorizontalOptions = LayoutOptions.FillAndExpand,
 			};
 
+			#endregion
+
+			#region Event Listeners
+
 			signInButton.Clicked += OnSignInClicked;
 			_AADSignInButton.Clicked += OnAADSignInClicked;
 			_signUpButton.Clicked += OnSignUpClicked;
@@ -119,6 +125,9 @@ namespace tdlr
 			_firstNameField.TextChanged += OnFormEdit;
 			_lastNameField.TextChanged += OnFormEdit;
 
+			#endregion
+
+			#region Main Layout
 
 			Content = new StackLayout {
 				BackgroundColor = Color.Black,
@@ -196,31 +205,37 @@ namespace tdlr
 					},
 				}
 			};
-		}
 
-		protected override void OnAppearing ()
-		{
-			base.OnAppearing ();
+			#endregion
 		}
-
-		async void OnSignInClicked(object sender, EventArgs e)
+			
+		void OnSignInClicked(object sender, EventArgs e)
 		{
 			Navigation.PopAsync();
 		}
 
-		async void OnSignUpClicked(object sender, EventArgs e)
+		void OnSignUpClicked(object sender, EventArgs e)
 		{
-			if (isValidForm())
+			if (isValidForm ()) {
+				if (_passwordField.IsEnabled) {
+					this.DisplayAlert ("Please use AAD for sign up", "This is just a sample app ;-)", "OK");
+					return;
+				}
 				Navigation.PushAsync (new TaskListPage ());
+			}
 		}
 
 		async void OnEmailEntered(object sender, FocusEventArgs e)
 		{
+			// Check for a valid email address
 			string email = ((Entry)sender).Text;
 			Regex regex = new Regex (@"^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$");
 			Match match = regex.Match (email);
+
 			if (match.Success) {
 				string domain = email.Substring(email.IndexOf('@') + 1).ToLower();
+
+				// Check if the email typed in has an associated AAD tenant, and show the sign in button if so
 				if (GraphHelper.isAADDomain (domain)) {
 					_AADSignInButton.FadeTo (1, 400);
 					return;
@@ -231,23 +246,30 @@ namespace tdlr
 
 		async void OnAADSignInClicked(object sender, EventArgs e)
 		{
+			// Only allow click if the button is visible
 			if (((Button)sender).Opacity >= 1) {
 				try {
+
+					// Sign the user in and get a token from ADAL, passing the email field as a login hint.
 					AuthenticationResult authResult = await App.AuthContext.AcquireTokenAsync (App.taskApiResourceId, App.clientId, App.redirectUri, platformParams, new UserIdentifier(_emailField.Text, UserIdentifierType.OptionalDisplayableId), null);
+
+					// If the request succeeds, populate the sign up form appropriately.
 					_emailField.Text = authResult.UserInfo.DisplayableId;
 					_passwordField.IsEnabled = false;
 					_passwordField.BackgroundColor = Color.Gray;
 					_passwordConfirmField.IsEnabled = false;
 					_passwordConfirmField.BackgroundColor = Color.Gray;
 					_firstNameField.Text = authResult.UserInfo.GivenName;
-					_firstNameField.Text = authResult.UserInfo.FamilyName;
+					_lastNameField.Text = authResult.UserInfo.FamilyName;
+
 				} catch (Exception ex) {
-					// Sign In Failed, Stay on Sign In Screen
+					this.DisplayAlert ("Error signing you in.", ex.Message, "OK");
 				}
 			}
 		}
 
-		async void OnFormEdit(object sender, TextChangedEventArgs e)
+		// When the form is edited, enable/disable the sign up button
+		void OnFormEdit(object sender, TextChangedEventArgs e)
 		{
 			if (isValidForm ()) {
 				_signUpButton.IsEnabled = true;
@@ -258,6 +280,7 @@ namespace tdlr
 			}
 		}
 
+		// Evaluate if the sign up form is acceptable
 		private bool isValidForm () {
 			return !String.IsNullOrEmpty (_emailField.Text) &&
 			(!String.IsNullOrEmpty (_passwordField.Text) || !_passwordField.IsEnabled) &&

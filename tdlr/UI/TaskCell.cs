@@ -3,6 +3,7 @@ using Xamarin.Forms;
 
 namespace tdlr
 {
+	// Cell used for displaying tasks in a ListView
 	public class TaskCell : ViewCell
 	{
 		public TaskCell ()
@@ -18,11 +19,11 @@ namespace tdlr
 			Image status = new Image {
 				Source = ImageSource.FromFile("ic_more_horiz.png"),
 				VerticalOptions = LayoutOptions.Center,
+				HorizontalOptions = LayoutOptions.EndAndExpand,
 			};
 			task.SetBinding (Label.TextProperty, "TaskText");
 			statusText.SetBinding (Label.TextProperty, "Status");
 			status.SetBinding(Image.SourceProperty, "StatusImage");
-			status.HorizontalOptions = LayoutOptions.EndAndExpand;
 
 			StackLayout horizontalLayout = new StackLayout {
 				Orientation = StackOrientation.Horizontal,
@@ -44,7 +45,6 @@ namespace tdlr
 				HorizontalOptions = LayoutOptions.StartAndExpand,
 			};
 			cellWrapper.Children.Add (horizontalLayout);
-//			View.HorizontalOptions = LayoutOptions.StartAndExpand;
 			View = cellWrapper;
 		}
 

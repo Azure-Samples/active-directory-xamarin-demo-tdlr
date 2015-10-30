@@ -5,6 +5,7 @@ namespace tdlr
 {
 	public class Task : INotifyPropertyChanged
 	{
+		// Property getters & setters modified for Xam behavior
 		private string _status;
 		public event PropertyChangedEventHandler PropertyChanged;
 		public int TaskID { get; set;}
@@ -28,6 +29,7 @@ namespace tdlr
 			}
 		}
 
+		// Icon for task statuses
 		private string MapStatusToIcon(string status)
 		{
 			switch (status)

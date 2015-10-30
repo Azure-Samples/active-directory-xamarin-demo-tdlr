@@ -8,6 +8,7 @@ namespace tdlr
 {
 	public class App : Application
 	{
+		// App Config Values
 		public static AuthenticationContext AuthContext;
 		public static string clientId = "3d8c4803-ffcd-4b2a-baec-05056abdc408";
 		public static string taskApiResourceId = "https://strockisdevtwo.onmicrosoft.com/tdlr";
@@ -18,15 +19,21 @@ namespace tdlr
 
 		public App ()
 		{
-			// The root page of your application
-
-			AuthContext = new AuthenticationContext (commonAuthority);
-			if (AuthContext.TokenCache.ReadItems ().Count () > 0) {
-				string cachedAuthority = AuthContext.TokenCache.ReadItems ().First ().Authority;
-				AuthContext = new AuthenticationContext (cachedAuthority);
-			}
-
+			App.SetADALAuthority ();
 			MainPage = new NavigationPage(new TaskListPage());
+		}
+
+		public static void SetADALAuthority() 
+		{
+			// If there aren't any tokens cached from previous app runs, use the common authority
+			App.AuthContext = new AuthenticationContext (commonAuthority);
+			if (App.AuthContext.TokenCache.ReadItems ().Count () > 0) {
+
+				// But if there was a cached token, use its authority to maintain the user's session
+				string cachedAuthority = App.AuthContext.TokenCache.ReadItems ().First ().Authority;
+				App.AuthContext = new AuthenticationContext (cachedAuthority);
+			}
+			
 		}
 
 		protected override void OnStart ()

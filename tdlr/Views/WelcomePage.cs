@@ -8,6 +8,8 @@ namespace tdlr
 	{
 		public WelcomePage ()
 		{
+			#region UI Init
+
 			NavigationPage.SetHasNavigationBar (this, false);
 
 			Button signUpButton = new Button { 
@@ -32,9 +34,16 @@ namespace tdlr
 				VerticalOptions = LayoutOptions.CenterAndExpand,
 			};
 
+			#endregion
+
+			#region Event Handlers
+
 			signUpButton.Clicked += OnSignUpClicked;
 			signInButton.Clicked += OnSignInClicked;
 
+			#endregion
+
+			#region Main Layout
 
 			Content = new StackLayout {
 				BackgroundColor = Color.Black,
@@ -91,19 +100,16 @@ namespace tdlr
 					},
 				}
 			};
+
+			#endregion
 		}
 
-		protected override void OnAppearing ()
-		{
-			base.OnAppearing ();
-		}
-
-		async void OnSignUpClicked(object sender, EventArgs e)
+		void OnSignUpClicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync (new SignUpPage ());
 		}
 
-		async void OnSignInClicked(object sender, EventArgs e)
+		void OnSignInClicked(object sender, EventArgs e)
 		{
 			Navigation.PushAsync (new SignInPage ());
 		}

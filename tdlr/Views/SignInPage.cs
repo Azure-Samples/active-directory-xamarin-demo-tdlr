@@ -11,6 +11,8 @@ namespace tdlr
 
 		public SignInPage ()
 		{
+			#region UI Init
+
 			NavigationPage.SetHasNavigationBar (this, false);
 
 			Button signInButton = new Button { 
@@ -68,10 +70,17 @@ namespace tdlr
 				HorizontalOptions = LayoutOptions.FillAndExpand,
 			};
 
+			#endregion
+
+			#region Event Listeners
+
 			signInButton.Clicked += OnSignInClicked;
 			AADSignInButton.Clicked += OnAADSignInClicked;
 			signUpButton.Clicked += OnSignUpClicked;
 
+			#endregion
+
+			#region Main Layout
 
 			Content = new StackLayout {
 				BackgroundColor = Color.Black,
@@ -146,30 +155,34 @@ namespace tdlr
 					},
 				}
 			};
+
+			#endregion
 		}
 
-		protected override void OnAppearing ()
+		// We don't actually have local accounts
+		void OnSignInClicked(object sender, EventArgs e)
 		{
-			base.OnAppearing ();
+			this.DisplayAlert ("Please use AAD for sign in", "This is just a sample app ;-)", "OK");
 		}
 
-		async void OnSignInClicked(object sender, EventArgs e)
-		{
-			Navigation.PopAsync();
-		}
-
-		async void OnSignUpClicked(object sender, EventArgs e)
+		// Go back a page, because the user wants to sign up instead
+		void OnSignUpClicked(object sender, EventArgs e)
 		{
 			Navigation.PopAsync ();
 		}
 
+		// Sign the user in with AAD
 		async void OnAADSignInClicked(object sender, EventArgs e)
 		{
 			try {
-				AuthenticationResult authResult = await App.AuthContext.AcquireTokenAsync (App.taskApiResourceId, App.clientId, App.redirectUri, platformParams);
+				
+				// Sign the user in with ADAL and cache the resulting token for later
+				await App.AuthContext.AcquireTokenAsync (App.taskApiResourceId, App.clientId, App.redirectUri, platformParams);
+
+				// If the sign in succeeds, go to the task page
 				Navigation.PushAsync(new TaskListPage());
 			} catch (Exception ex) {
-				// Sign In Failed, Stay on Sign In Screen
+				this.DisplayAlert("Error signing you in", ex.Message, "OK");
 			}
 
 		}
