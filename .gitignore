@@ -138,6 +138,16 @@ publish/
 *.nupkg
 # The packages folder can be ignored because of Package Restore
 **/packages/*
+
+# Need to keep the ADAL dll’s because Xamarin Studio can’t get it from NuGet
+!**/packages/Microsoft.IdentityModel.Clients.ActiveDirectory
+**/packages/Microsoft.IdentityModel.Clients.ActiveDirectory/*
+!**/packages/Microsoft.IdentityModel.Clients.ActiveDirectory/lib
+**/packages/Microsoft.IdentityModel.Clients.ActiveDirectory/lib/*
+!**/packages/Microsoft.IdentityModel.Clients.ActiveDirectory/lib/Xamarin.iOS10
+**/packages/Microsoft.IdentityModel.Clients.ActiveDirectory/lib/Xamarin.iOS10/*
+!**/packages/Microsoft.IdentityModel.Clients.ActiveDirectory/lib/Xamarin.iOS10/*.dll
+
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
