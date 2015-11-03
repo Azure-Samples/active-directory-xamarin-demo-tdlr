@@ -55,6 +55,24 @@ You'll also need an Azure Activce Directory tenant in which to register your app
 
 Note: if you can't find the TDLR; web app in this menu, read the above section.  You'll first need to spin up your own instance of the tdlr; web service, or sign up for ours.
 
+### Modify the regisration of the tdlr; web app
+
+In order for the Xamarin app to work across many tenants, you will need to explicitly bind the client app registration in Azure AD with the registration for the web API. You can do so by adding the "Client ID" of the Xamarin app, to the manifest of the web app.
+
+Note: if you are using our instance of the tdlr; service, you can skip this section.  But remember you will have to perform the workaround described above for every tenant which you want to use to sign into the app.
+
+1. Retrieve the application manifest file for the tdlr; web app you registered
+    2. returning to the tdlr; web app application page in the Azure portal
+    3. click the "Manage Manifest" option at the bottom of the page, and select "Download Manifest"
+    4. save the manifest and open it for editing
+
+2. In the manifest, locate the `knownClientApplications` array property, and add the Client ID for your Xamarin app as an element. Your code should look like the following after you're done:
+    `"knownClientApplications": ["94da0930-763f-45c7-8d26-04d5938baab2"]`
+3. Save the tdlr; web app manifest back to your Azure AD tenant by
+    4. returning to the tdlr; application page in the Azure portal
+    5. click the "Manage Manifest" option at the bottom of the page, and select "Upload Manifest"
+    6. browse to the text file you updated in step 2 and upload it
+
 ### Download the code
 
 Now you can [download this repo as a zip](https://github.com/AzureADSamples/azureroadshow-xamarin/archive/master.zip) or clone it to your local machine:
