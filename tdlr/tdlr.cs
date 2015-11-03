@@ -10,7 +10,7 @@ namespace tdlr
 	{
 		// App Config Values
 		public static AuthenticationContext AuthContext;
-		public static string clientId = "3d8c4803-ffcd-4b2a-baec-05056abdc408";
+		public static string clientId = "[Enter your client ID as registered in the Azure Management Portal, e.g. 3d8c4803-ffcd-4b2a-baec-05056abdc408]";
 		public static string taskApiResourceId = "https://strockisdevtwo.onmicrosoft.com/tdlr";
 		public static string graphApiResourceId = "https://graph.windows.net";
 		public static string graphApiVersion = "1.6";
