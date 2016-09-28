@@ -36,9 +36,7 @@ If you don't want to spin up your own tdlr; service, you can instead use our ins
 
 ### Register an app with Azure AD
 
-You'll now need to register your Xamarin app in the Azure Portal so that your version of tdlr; can sign users in and get information from Azure AD.  In order to do so, you will need an Azure Subscription.  If you don't already have an Azure subscription, you can get a free subscription by signing up at [http://azure.com](http://azure.com).  All of the Azure AD features used by this sample are available free of charge.
-
-You'll also need an Azure Activce Directory tenant in which to register your application.  Every Azure subscription has an associated tenant, which you are free to use.  You may also wish to create an additional tenant, since the tdlr; app is 'multi-tenant' - it allows users from any organization to sign up & sign in.  You'll want to create a few users in your tenant(s) for testing purposes - a guest user with a personal MSA account will not work for this sample.
+You'll now need to register your Xamarin app in the Azure Portal so that your version of tdlr; can sign users in and get information from Azure AD. You'll need an Azure Activce Directory tenant in which to register your application. For more information on how to get an Azure AD tenant, please see [How to get an Azure AD tenant](https://azure.microsoft.com/en-us/documentation/articles/active-directory-howto-tenant/). You may also wish to create an additional tenant, since the tdlr; app is 'multi-tenant' - it allows users from any organization to sign up & sign in.  You'll want to create a few users in your tenant(s) for testing purposes - a guest user with a personal MSA account will not work for this sample.
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 2. On the top bar, click on your account and under the **Directory** list, choose the Active Directory tenant where you wish to register your application.
