@@ -36,28 +36,22 @@ If you don't want to spin up your own tdlr; service, you can instead use our ins
 
 ### Register an app with Azure AD
 
-You'll now need to register your Xamarin app in the Azure Management Portal so that your version of tdlr; can sign users in and get information from Azure AD.  In order to do so, you will need an Azure Subscription.  If you don't already have an Azure subscription, you can get a free subscription by signing up at [http://azure.com](http://azure.com).  All of the Azure AD features used by this sample are available free of charge.
+You'll now need to register your Xamarin app in the Azure Portal so that your version of tdlr; can sign users in and get information from Azure AD. You'll need an Azure Activce Directory tenant in which to register your application. For more information on how to get an Azure AD tenant, please see [How to get an Azure AD tenant](https://azure.microsoft.com/en-us/documentation/articles/active-directory-howto-tenant/). You may also wish to create an additional tenant, since the tdlr; app is 'multi-tenant' - it allows users from any organization to sign up & sign in.  You'll want to create a few users in your tenant(s) for testing purposes - a guest user with a personal MSA account will not work for this sample.
 
-You'll also need an Azure Activce Directory tenant in which to register your application.  Every Azure subscription has an associated tenant, which you are free to use.  You may also wish to create an additional tenant, since the tdlr; app is 'multi-tenant' - it allows users from any organization to sign up & sign in.  You'll want to create a few users in your tenant(s) for testing purposes - a guest user with a personal MSA account will not work for this sample.
-
-1. Sign in to the [Azure management portal](https://manage.windowsazure.com).
-2. Click on Active Directory in the left hand nav.
-3. Click the directory tenant where you wish to register the sample application.
-4. Click the Applications tab.
-5. In the drawer, click Add.
-6. Click "Add an application my organization is developing".
-7. Enter a friendly name for the application, for example "TDLR;", select "Native Client Application", and click next.
-8. For the Redirect URI, enter `http://tdlr`.  Click finish.
-9. Click the Configure tab of the application.
-10. Find the Client ID value and copy it aside, you will need this later when configuring your application.
-13. In "Permissions to Other Applications", click the dropdown for "Delegated Permissions".  Check the `Access the directory as the signed-in user` permission.  Your app should now show two delegated permission.
-11. Also in the "Permissions to Other Applications" section, click "Add Application."  Select "Other" in the "Show" dropdown, and click the upper check mark.  Locate & click on the tdlr; web app, and click the bottom check mark to add the application.  Select "Access TDLR;" from the "Delegated Permissions" dropdown, and save the configuration.
+1. Sign in to the [Azure portal](https://portal.azure.com).
+2. On the top bar, click on your account and under the **Directory** list, choose the Active Directory tenant where you wish to register your application.
+3. Click on **More Services** in the left hand nav, and choose **Azure Active Directory**.
+4. Click on **App registrations** and choose **Add**.
+5. Enter a friendly name for the application, for example 'TDLR;' and select 'Native' as the Application Type. For the redirect URI, enter `http://tdlr`. Click on **Create** to create the application.
+6. While still in the Azure portal, choose your application, click on **Settings** and choose **Properties**.
+7. Find the Application ID value and copy it to the clipboard.
+8. Configure Permissions for your application - in the Settings menu, choose the 'Required permissions' section, click on **Add**, then **Select an API**, and select 'Microsoft Graph' (this is the Graph API). Then, click on  **Select Permissions** and select 'Read Directory Data'. Also in the same section, locate and click on the tdlr; web app (you can type it in the search box to locate), and click the bottom check mark to add the application.  Select "Access TDLR;" from the "Delegated Permissions" dropdown, and save the configuration.
 
 Note: if you can't find the TDLR; web app in this menu, read the above section.  You'll first need to spin up your own instance of the tdlr; web service, or sign up for ours.
 
-### Modify the regisration of the tdlr; web app
+### Modify the registration of the tdlr; web app
 
-In order for the Xamarin app to work across many tenants, you will need to explicitly bind the client app registration in Azure AD with the registration for the web API. You can do so by adding the "Client ID" of the Xamarin app, to the manifest of the web app.
+In order for the Xamarin app to work across many tenants, you will need to explicitly bind the client app registration in Azure AD with the registration for the web API. You can do so by adding the "Application ID" of the Xamarin app, to the manifest of the web app.
 
 Note: if you are using our instance of the tdlr; service, you can skip this section.  But remember you will have to perform the workaround described above for every tenant which you want to use to sign into the app.
 
@@ -66,7 +60,7 @@ Note: if you are using our instance of the tdlr; service, you can skip this sect
     3. click the "Manage Manifest" option at the bottom of the page, and select "Download Manifest"
     4. save the manifest and open it for editing
 
-2. In the manifest, locate the `knownClientApplications` array property, and add the Client ID for your Xamarin app as an element. Your code should look like the following after you're done:
+2. In the manifest, locate the `knownClientApplications` array property, and add the Application ID for your Xamarin app as an element. Your code should look like the following after you're done:
     `"knownClientApplications": ["94da0930-763f-45c7-8d26-04d5938baab2"]`
 3. Save the tdlr; web app manifest back to your Azure AD tenant by
     4. returning to the tdlr; application page in the Azure portal
@@ -98,4 +92,3 @@ Note: if you are using our instance of the tdlr; service, leave the default valu
 ### Run the app!
 
 You can now run the tdlr; app and explore its functionality.  Try signing up and signing in with your Azure AD users, creating tasks, and sharing them with other users.  To understand the code behind the app, we recommend you watch on of the recorded Microsoft Cloud Roadshow sessions which will be available soon [here]().  If you're already familiar with Azure AD, you may find the code comments instructive as well.
-
