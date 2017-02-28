@@ -251,7 +251,7 @@ namespace tdlr
 				try {
 
 					// Sign the user in and get a token from ADAL, passing the email field as a login hint.
-					AuthenticationResult authResult = await App.AuthContext.AcquireTokenAsync (App.taskApiResourceId, App.clientId, App.redirectUri, platformParams, new UserIdentifier(_emailField.Text, UserIdentifierType.OptionalDisplayableId), null);
+					AuthenticationResult authResult = await App.AuthContext.AcquireTokenAsync (App.taskApiResourceId, App.clientId, App.redirectUri, App.PlatformParameters, new UserIdentifier(_emailField.Text, UserIdentifierType.OptionalDisplayableId), null);
 
 					// If the request succeeds, populate the sign up form appropriately.
 					_emailField.Text = authResult.UserInfo.DisplayableId;

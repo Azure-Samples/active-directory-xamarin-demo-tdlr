@@ -9,8 +9,7 @@ namespace tdlr
 	public class App : Application
 	{
 		// App Config Values
-		public static AuthenticationContext AuthContext;
-		public static string clientId = "[Enter your client ID as registered in the Azure Management Portal, e.g. 3d8c4803-ffcd-4b2a-baec-05056abdc408]";
+		public static string clientId = "3b4c1be3-8c00-4162-935e-61b4601bf1d9"; // Enter your client ID as registered in the Azure Management Portal if setting up your own app
 		public static string taskApiResourceId = "https://strockisdevtwo.onmicrosoft.com/tdlr";
 		public static string graphApiResourceId = "https://graph.windows.net";
 		public static string graphApiVersion = "1.6";
@@ -19,21 +18,40 @@ namespace tdlr
 
 		public App ()
 		{
-			App.SetADALAuthority ();
 			MainPage = new NavigationPage(new TaskListPage());
 		}
 
-		public static void SetADALAuthority() 
+		public static IPlatformParameters PlatformParameters { get; set; }
+
+		private static AuthenticationContext authContext;
+		public static AuthenticationContext AuthContext
+		{
+			get
+			{
+				if (authContext == null)
+				{
+					SetADALAuthority();
+				}
+				return authContext;
+			}
+		}
+
+		public static void SignOut()
+		{
+			AuthContext.TokenCache.Clear();
+			authContext = null;
+		}
+
+		private static void SetADALAuthority() 
 		{
 			// If there aren't any tokens cached from previous app runs, use the common authority
-			App.AuthContext = new AuthenticationContext (commonAuthority);
-			if (App.AuthContext.TokenCache.ReadItems ().Count () > 0) {
+			authContext = new AuthenticationContext (commonAuthority);
+			if (authContext.TokenCache.ReadItems ().Count () > 0) {
 
 				// But if there was a cached token, use its authority to maintain the user's session
-				string cachedAuthority = App.AuthContext.TokenCache.ReadItems ().First ().Authority;
-				App.AuthContext = new AuthenticationContext (cachedAuthority);
+				string cachedAuthority = authContext.TokenCache.ReadItems ().First ().Authority;
+				authContext = new AuthenticationContext (cachedAuthority);
 			}
-			
 		}
 
 		protected override void OnStart ()

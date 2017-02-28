@@ -177,7 +177,7 @@ namespace tdlr
 			try {
 				
 				// Sign the user in with ADAL and cache the resulting token for later
-				await App.AuthContext.AcquireTokenAsync (App.taskApiResourceId, App.clientId, App.redirectUri, platformParams);
+				await App.AuthContext.AcquireTokenAsync (App.taskApiResourceId, App.clientId, App.redirectUri, App.PlatformParameters);
 
 				// If the sign in succeeds, go to the task page
 				Navigation.PushAsync(new TaskListPage());

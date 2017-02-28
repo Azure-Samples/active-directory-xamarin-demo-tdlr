@@ -214,8 +214,7 @@ namespace tdlr
 		// Menu is used for logout
 		async void OnMenuClicked(View image, object sender)
 		{
-			App.AuthContext.TokenCache.Clear ();
-			App.SetADALAuthority ();
+			App.SignOut ();
 			Navigation.PopAsync ();
 		}
 

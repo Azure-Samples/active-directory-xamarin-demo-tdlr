@@ -7,6 +7,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace tdlr.Droid
 {
@@ -20,7 +21,15 @@ namespace tdlr.Droid
 			global::Xamarin.Forms.Forms.Init (this, bundle);
 
 			LoadApplication (new App ());
-		}
-	}
+
+			App.PlatformParameters= new PlatformParameters((Activity)global::Xamarin.Forms.Forms.Context);
+        }
+
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+            AuthenticationAgentContinuationHelper.SetAuthenticationAgentContinuationEventArgs(requestCode, resultCode, data);
+        }
+    }
 }
 
