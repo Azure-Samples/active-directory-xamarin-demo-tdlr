@@ -71,7 +71,7 @@ Note: if you are using our instance of the tdlr; service, you can skip this sect
 
 Now you can [download this repo as a zip](https://github.com/AzureADSamples/azureroadshow-xamarin/archive/master.zip) or clone it to your local machine:
 
-`git clone https://github.com/azureadsamples/azureroadshow-xamarin`
+`git clone https://github.com/Azure-Samples/active-directory-xamarin-demo-tdlr`
 
 In your local repo, open the `tdlr.sln` file in Xamarin Studio.
 
