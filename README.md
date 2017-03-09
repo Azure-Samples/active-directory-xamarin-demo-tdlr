@@ -24,15 +24,15 @@ The full service consists of three different sample projects:
 
 ## Running the tdlr; iOS app
 
-### Get a mac, and get Xamarin
+### Get Xamarin
 
-At this point in time, the tdlr; app will only run on iOS - which means that you will need a mac on which to deploy the code.  In addition, you will need to [download & install Xamarin](http://xamarin.com/download) on your machine.  This code sample was built using Xamarin Studio, which is installed by default when your install Xamarin on your machine.  You are free to use Visual Studio on a Windows machine and remote connect to the Xamarin.iOS build host via wifi - but setting up your development environment will be a bit more involved.
+The tdlr; app will run on iOS or Android. If you want to run on iOS you will need a mac on which to build the code.  In addition, you will need to [download & install Xamarin](http://xamarin.com/download) on your machine.  This code sample was built using Xamarin Studio, which is installed by default when your install Xamarin on your machine.  You are free to use Visual Studio on a Windows machine and remote connect to the Xamarin.iOS build host via wifi - but setting up your development environment will be a bit more involved.
 
 ### Running the tdlr; web service
 
-This sample Xamarin application is written to be used with the tdlr; web app as its backend data storage service.  Before proceeding, you will need to create your own instance of the service by following the instructions for the [tdlr web app](https://github.com/azureadsamples/azureroadshow-web) and host it somewhere where your iOS app can communicate with it - we recommend deploying it as an Azure web app.
+This sample Xamarin application is written to be used with the tdlr; web app as its backend data storage service.  Before proceeding, you will need to create your own instance of the service by following the instructions for the [tdlr web app](https://github.com/azureadsamples/azureroadshow-web) and host it somewhere where your device app can communicate with it - we recommend deploying it as an Azure web app.
 
-If you don't want to spin up your own tdlr; service, you can instead use our instance as a workaround.  To sign up for our tdlr; service, open [this link](http://todolistreimagined.azurewebsites.net/account/signup/aad?sign_up_hint=) in a new tab.  Sign in with a user in your development tenant.  This process will add our tdlr; service to your tenant so you can configure your app to access it.  Note that **you will need to repeat this process for each tenant** that you use to sign into your iOS app (we told you it was a workaround).
+If you don't want to spin up your own tdlr; service, you can instead use our instance as a workaround.  To sign up for our tdlr; service, open [this link](http://todolistreimagined.azurewebsites.net/account/signup/aad?sign_up_hint=) in a new tab.  Sign in with a user in your development tenant.  This process will add our tdlr; service to your tenant so you can configure your app to access it.  Note that **you will need to repeat this process for each tenant** that you use to sign into device app (we told you it was a workaround).
 
 ### Register an app with Azure AD
 
@@ -91,4 +91,4 @@ Note: if you are using our instance of the tdlr; service, leave the default valu
 
 ### Run the app!
 
-You can now run the tdlr; app and explore its functionality.  Try signing up and signing in with your Azure AD users, creating tasks, and sharing them with other users.  To understand the code behind the app, we recommend you watch on of the recorded Microsoft Cloud Roadshow sessions which will be available soon [here]().  If you're already familiar with Azure AD, you may find the code comments instructive as well.
+You can now run the tdlr; app and explore its functionality.  Try signing up and signing in with your Azure AD users, creating tasks, and sharing them with other users.  To understand the code behind the app, we recommend you watch one of the recorded Microsoft Cloud Roadshow sessions which will be available soon [here]().  If you're already familiar with Azure AD, you may find the code comments instructive as well.

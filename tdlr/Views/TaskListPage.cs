@@ -328,8 +328,7 @@ namespace tdlr
 		// Logout
 		async void OnMenuClicked(View image, object sender)
 		{
-			App.AuthContext.TokenCache.Clear ();
-			App.SetADALAuthority ();
+			App.SignOut ();
 			OnAppearing ();
 		}
 

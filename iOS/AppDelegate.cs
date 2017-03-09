@@ -4,6 +4,7 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace tdlr.iOS
 {
@@ -21,7 +22,11 @@ namespace tdlr.iOS
 
 			LoadApplication (new App ());
 
-			return base.FinishedLaunching (app, options);
+			var result = base.FinishedLaunching(app, options);
+
+			App.PlatformParameters = new PlatformParameters(UIApplication.SharedApplication.KeyWindow.RootViewController);
+
+			return result;
 		}
 	}
 }
